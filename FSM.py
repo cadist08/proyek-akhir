@@ -2,6 +2,7 @@ class State:
     START = "START"
     MENU = "MENU"
 
+    # Layanan Dokumen
     KTP = "KTP"
     KK = "KK"
     AKTA = "AKTA"
@@ -9,6 +10,26 @@ class State:
     PASPOR = "PASPOR"
     BPJS = "BPJS"
     PAJAK = "PAJAK"
+
+    # Sub-state layanan
+    KTP_DETAIL = "KTP_DETAIL"
+    SIM_DETAIL = "SIM_DETAIL"
+    BPJS_DETAIL = "BPJS_DETAIL"
+    PAJAK_DETAIL = "PAJAK_DETAIL"
+
+    # Fitur Tambahan
     PENGADUAN = "PENGADUAN"
+    PENGADUAN_KATEGORI = "PENGADUAN_KATEGORI"
+    PENGADUAN_TULIS = "PENGADUAN_TULIS"
+
+    ANTRIAN = "ANTRIAN"
+    ANTRIAN_PILIH = "ANTRIAN_PILIH"
+
+    STATUS = "STATUS"
+
+    FAQ = "FAQ"
+    FAQ_DETAIL = "FAQ_DETAIL"
+
+    JADWAL = "JADWAL"
 
     EXIT = "EXIT"
