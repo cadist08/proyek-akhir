@@ -15,7 +15,7 @@ class GovernmentChatbot:
             self.state = State.MENU
 
             return """
-Selamat Datang di Chatbot Layanan Publik Indonesia 🇮🇩
+👋 Selamat Datang di Smart Public Service Chatbot
 
 Silakan pilih layanan:
 
@@ -28,8 +28,6 @@ Silakan pilih layanan:
 7. Pajak
 8. Pengaduan
 9. Keluar
-
-Ketik angka menu yang diinginkan.
 """
 
         elif self.state == State.MENU:
@@ -38,152 +36,125 @@ Ketik angka menu yang diinginkan.
                 self.state = State.KTP
 
                 return """
-Persyaratan Pembuatan KTP:
+🪪 Persyaratan KTP
 
 • Berusia minimal 17 tahun
 • Membawa Kartu Keluarga
-• Datang ke Disdukcapil setempat
+• Datang ke Disdukcapil
 
-Ketik menu lain untuk melanjutkan.
+Ketik apa saja untuk kembali ke menu.
 """
 
             elif msg == "2":
                 self.state = State.KK
 
                 return """
-Persyaratan Pembuatan KK:
+👨‍👩‍👧‍👦 Persyaratan KK
 
 • Surat Pengantar RT/RW
 • Buku Nikah
-• Dokumen pendukung lainnya
+• Dokumen pendukung
 
-Ketik menu lain untuk melanjutkan.
+Ketik apa saja untuk kembali ke menu.
 """
 
             elif msg == "3":
                 self.state = State.AKTA
 
                 return """
-Persyaratan Akta Kelahiran:
+📄 Persyaratan Akta Kelahiran
 
 • Surat Kelahiran
 • KTP Orang Tua
 • Kartu Keluarga
 
-Ketik menu lain untuk melanjutkan.
+Ketik apa saja untuk kembali ke menu.
 """
 
             elif msg == "4":
                 self.state = State.SIM
 
                 return """
-Persyaratan Pembuatan SIM:
+🚗 Persyaratan SIM
 
 • Fotokopi KTP
 • Surat Kesehatan
 • Lulus Tes Teori dan Praktik
 
-Ketik menu lain untuk melanjutkan.
+Ketik apa saja untuk kembali ke menu.
 """
 
             elif msg == "5":
                 self.state = State.PASPOR
 
                 return """
-Persyaratan Paspor:
+🛂 Persyaratan Paspor
 
 • E-KTP
-• KK
+• Kartu Keluarga
 • Akta Kelahiran
 
-Pendaftaran dapat dilakukan melalui aplikasi M-Paspor.
+Pendaftaran melalui aplikasi M-Paspor.
 
-Ketik menu lain untuk melanjutkan.
+Ketik apa saja untuk kembali ke menu.
 """
 
             elif msg == "6":
                 self.state = State.BPJS
 
                 return """
-Persyaratan Pendaftaran BPJS:
+🏥 Persyaratan BPJS
 
 • KTP
 • KK
 • Nomor HP Aktif
 
-Ketik menu lain untuk melanjutkan.
+Ketik apa saja untuk kembali ke menu.
 """
 
             elif msg == "7":
                 self.state = State.PAJAK
 
                 return """
-Informasi Pajak:
+💰 Informasi Pajak
 
 • Memiliki NPWP
 • Memiliki EFIN
-• Pelaporan melalui DJP Online
+• Lapor melalui DJP Online
 
-Ketik menu lain untuk melanjutkan.
+Ketik apa saja untuk kembali ke menu.
 """
 
             elif msg == "8":
-
                 self.state = State.PENGADUAN
 
                 return """
-Silakan tuliskan pengaduan Anda.
-Contoh:
+📢 Silakan tuliskan pengaduan Anda.
 
-"Jalan rusak di Kecamatan ABC"
+Contoh:
+Jalan rusak di Kecamatan ABC
 """
 
             elif msg == "9":
-
                 self.state = State.EXIT
 
-                return "Terima kasih telah menggunakan layanan kami."
+                return "🙏 Terima kasih telah menggunakan layanan kami."
 
             else:
-
-                return """
-Pilihan tidak tersedia.
-
-Silakan pilih:
-
-1. KTP
-2. KK
-3. Akta Kelahiran
-4. SIM
-5. Paspor
-6. BPJS
-7. Pajak
-8. Pengaduan
-9. Keluar
-"""
+                return "Silakan pilih menu 1 sampai 9."
 
         elif self.state == State.PENGADUAN:
 
             self.state = State.MENU
 
             return f"""
-Pengaduan berhasil diterima:
+✅ Pengaduan berhasil diterima
 
 "{message}"
 
-Laporan akan diteruskan ke instansi terkait.
+Terima kasih atas laporan Anda.
 
-Silakan pilih layanan kembali:
-
-1. KTP
-2. KK
-3. Akta Kelahiran
-4. SIM
-5. Paspor
-6. BPJS
-7. Pajak
-8. Pengaduan
-9. Keluar
+Silakan pilih menu kembali.
 """
 
         elif self.state in [
@@ -199,7 +170,7 @@ Silakan pilih layanan kembali:
             self.state = State.MENU
 
             return """
-Silakan pilih layanan berikutnya:
+🏠 Kembali ke Menu
 
 1. KTP
 2. KK
@@ -213,5 +184,4 @@ Silakan pilih layanan berikutnya:
 """
 
         elif self.state == State.EXIT:
-
-            return "Program telah selesai."
+            return "Program selesai."

@@ -9,41 +9,36 @@ st.set_page_config(
 
 st.markdown("""
 <style>
-.main-title{
+
+.main-header{
     text-align:center;
-    color:#1f77b4;
+    padding:20px;
 }
-.card{
-    background:#f8f9fa;
-    padding:15px;
-    border-radius:10px;
-    margin-bottom:10px;
+
+.hero{
+    background: linear-gradient(135deg,#1e40af,#2563eb);
+    color:white;
+    padding:30px;
+    border-radius:15px;
+    text-align:center;
+    margin-bottom:20px;
 }
+
+.footer{
+    text-align:center;
+    color:gray;
+    margin-top:20px;
+}
+
 </style>
 """, unsafe_allow_html=True)
 
-st.markdown(
-    "<h1 class='main-title'>🏛️ Chatbot Layanan Publik Indonesia</h1>",
-    unsafe_allow_html=True
-)
-
-st.write("Sistem Informasi Pemerintahan Berbasis Finite State Machine (FSM)")
-
-col1, col2, col3 = st.columns(3)
-
-with col1:
-    st.info("🪪 KTP")
-    st.info("👨‍👩‍👧‍👦 KK")
-
-with col2:
-    st.info("📄 Akta Kelahiran")
-    st.info("🚗 SIM")
-
-with col3:
-    st.info("🛂 Paspor")
-    st.info("🏥 BPJS")
-
-st.divider()
+st.markdown("""
+<div class="hero">
+    <h1>🏛️ Smart Public Service Chatbot</h1>
+    <p>Sistem Informasi Layanan Publik Berbasis Finite State Machine (FSM)</p>
+</div>
+""", unsafe_allow_html=True)
 
 if "bot" not in st.session_state:
     st.session_state.bot = GovernmentChatbot()
@@ -59,12 +54,124 @@ if "messages" not in st.session_state:
         "content": welcome
     })
 
-for message in st.session_state.messages:
+with st.sidebar:
 
-    with st.chat_message(message["role"]):
-        st.markdown(message["content"])
+    st.header("📋 Layanan")
 
-prompt = st.chat_input("Masukkan pilihan layanan...")
+    st.write("""
+    • KTP
+
+    • KK
+
+    • Akta Kelahiran
+
+    • SIM
+
+    • Paspor
+
+    • BPJS
+
+    • Pajak
+
+    • Pengaduan
+    """)
+
+    st.divider()
+
+    st.header("🔄 Reset")
+
+    if st.button("Reset Chat"):
+
+        st.session_state.bot = GovernmentChatbot()
+
+        st.session_state.messages = []
+
+        welcome = st.session_state.bot.process("start")
+
+        st.session_state.messages.append({
+            "role": "assistant",
+            "content": welcome
+        })
+
+        st.rerun()
+
+    st.divider()
+
+    st.header("📊 Diagram FSM")
+
+    st.code("""
+START
+ ↓
+MENU
+ ├─ KTP
+ ├─ KK
+ ├─ AKTA
+ ├─ SIM
+ ├─ PASPOR
+ ├─ BPJS
+ ├─ PAJAK
+ ├─ PENGADUAN
+ └─ EXIT
+""")
+
+st.subheader("⚡ Pilih Layanan Cepat")
+
+c1, c2, c3, c4 = st.columns(4)
+
+with c1:
+    if st.button("🪪 KTP"):
+        st.session_state.messages.append(
+            {"role": "user", "content": "1"}
+        )
+        st.session_state.messages.append(
+            {"role": "assistant",
+             "content": st.session_state.bot.process("1")}
+        )
+        st.rerun()
+
+with c2:
+    if st.button("👨‍👩‍👧‍👦 KK"):
+        st.session_state.messages.append(
+            {"role": "user", "content": "2"}
+        )
+        st.session_state.messages.append(
+            {"role": "assistant",
+             "content": st.session_state.bot.process("2")}
+        )
+        st.rerun()
+
+with c3:
+    if st.button("🚗 SIM"):
+        st.session_state.messages.append(
+            {"role": "user", "content": "4"}
+        )
+        st.session_state.messages.append(
+            {"role": "assistant",
+             "content": st.session_state.bot.process("4")}
+        )
+        st.rerun()
+
+with c4:
+    if st.button("🏥 BPJS"):
+        st.session_state.messages.append(
+            {"role": "user", "content": "6"}
+        )
+        st.session_state.messages.append(
+            {"role": "assistant",
+             "content": st.session_state.bot.process("6")}
+        )
+        st.rerun()
+
+st.divider()
+
+for msg in st.session_state.messages:
+
+    with st.chat_message(msg["role"]):
+        st.markdown(msg["content"])
+
+prompt = st.chat_input(
+    "Ketik angka menu atau tulis pengaduan..."
+)
 
 if prompt:
 
@@ -82,38 +189,7 @@ if prompt:
 
     st.rerun()
 
-with st.sidebar:
-
-    st.header("Tentang Sistem")
-
-    st.write("""
-    Chatbot ini menyediakan informasi:
-
-    • KTP
-    • KK
-    • Akta Kelahiran
-    • SIM
-    • Paspor
-    • BPJS
-    • Pajak
-    • Pengaduan
-    """)
-
-    st.divider()
-
-    st.write("State FSM")
-
-    st.code("""
-START
- ↓
-MENU
- ├─ KTP
- ├─ KK
- ├─ AKTA
- ├─ SIM
- ├─ PASPOR
- ├─ BPJS
- ├─ PAJAK
- ├─ PENGADUAN
- └─ EXIT
-""")
+st.markdown(
+    "<div class='footer'>© 2026 Smart Public Service Chatbot - FSM Project</div>",
+    unsafe_allow_html=True
+)
