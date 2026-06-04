@@ -1,4 +1,5 @@
 import streamlit as st
+from engine import GovernmentChatbot
 
 st.set_page_config(
     page_title="Chatbot Layanan Publik",
@@ -6,86 +7,113 @@ st.set_page_config(
     layout="wide"
 )
 
-st.title("🏛️ Chatbot Layanan Publik")
-st.write("Selamat datang di layanan informasi pemerintahan.")
+st.markdown("""
+<style>
+.main-title{
+    text-align:center;
+    color:#1f77b4;
+}
+.card{
+    background:#f8f9fa;
+    padding:15px;
+    border-radius:10px;
+    margin-bottom:10px;
+}
+</style>
+""", unsafe_allow_html=True)
+
+st.markdown(
+    "<h1 class='main-title'>🏛️ Chatbot Layanan Publik Indonesia</h1>",
+    unsafe_allow_html=True
+)
+
+st.write("Sistem Informasi Pemerintahan Berbasis Finite State Machine (FSM)")
+
+col1, col2, col3 = st.columns(3)
+
+with col1:
+    st.info("🪪 KTP")
+    st.info("👨‍👩‍👧‍👦 KK")
+
+with col2:
+    st.info("📄 Akta Kelahiran")
+    st.info("🚗 SIM")
+
+with col3:
+    st.info("🛂 Paspor")
+    st.info("🏥 BPJS")
+
+st.divider()
+
+if "bot" not in st.session_state:
+    st.session_state.bot = GovernmentChatbot()
 
 if "messages" not in st.session_state:
+
     st.session_state.messages = []
 
-for msg in st.session_state.messages:
-    with st.chat_message(msg["role"]):
-        st.write(msg["content"])
+    welcome = st.session_state.bot.process("start")
 
-prompt = st.chat_input("Ketik pertanyaan...")
+    st.session_state.messages.append({
+        "role": "assistant",
+        "content": welcome
+    })
+
+for message in st.session_state.messages:
+
+    with st.chat_message(message["role"]):
+        st.markdown(message["content"])
+
+prompt = st.chat_input("Masukkan pilihan layanan...")
 
 if prompt:
 
-    st.session_state.messages.append(
-        {"role": "user", "content": prompt}
-    )
+    st.session_state.messages.append({
+        "role": "user",
+        "content": prompt
+    })
 
-    with st.chat_message("user"):
-        st.write(prompt)
+    response = st.session_state.bot.process(prompt)
 
-    if "ktp" in prompt.lower():
-        response = """
-        Persyaratan KTP:
+    st.session_state.messages.append({
+        "role": "assistant",
+        "content": response
+    })
 
-        - Berusia 17 tahun
-        - Membawa KK
-        - Datang ke Disdukcapil
-        """
+    st.rerun()
 
-    elif "kk" in prompt.lower():
-        response = """
-        Persyaratan KK:
+with st.sidebar:
 
-        - Surat Pengantar RT/RW
-        - Buku Nikah
-        """
+    st.header("Tentang Sistem")
 
-    elif "paspor" in prompt.lower():
-        response = """
-        Persyaratan Paspor:
+    st.write("""
+    Chatbot ini menyediakan informasi:
 
-        - KTP
-        - KK
-        - Akta Kelahiran
-        """
+    • KTP
+    • KK
+    • Akta Kelahiran
+    • SIM
+    • Paspor
+    • BPJS
+    • Pajak
+    • Pengaduan
+    """)
 
-    elif "bpjs" in prompt.lower():
-        response = """
-        Persyaratan BPJS:
+    st.divider()
 
-        - KTP
-        - KK
-        - Nomor HP Aktif
-        """
+    st.write("State FSM")
 
-    elif "sim" in prompt.lower():
-        response = """
-        Persyaratan SIM:
-
-        - KTP
-        - Surat Kesehatan
-        - Tes Teori dan Praktik
-        """
-
-    else:
-        response = """
-        Maaf, layanan belum tersedia.
-
-        Kata kunci yang tersedia:
-        - KTP
-        - KK
-        - SIM
-        - Paspor
-        - BPJS
-        """
-
-    with st.chat_message("assistant"):
-        st.write(response)
-
-    st.session_state.messages.append(
-        {"role": "assistant", "content": response}
-    )
+    st.code("""
+START
+ ↓
+MENU
+ ├─ KTP
+ ├─ KK
+ ├─ AKTA
+ ├─ SIM
+ ├─ PASPOR
+ ├─ BPJS
+ ├─ PAJAK
+ ├─ PENGADUAN
+ └─ EXIT
+""")

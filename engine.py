@@ -8,15 +8,16 @@ class GovernmentChatbot:
 
     def process(self, message):
 
-        msg = message.lower()
+        msg = message.lower().strip()
 
         if self.state == State.START:
+
             self.state = State.MENU
 
             return """
-Selamat datang di Chatbot Layanan Publik Indonesia 🇮🇩
+Selamat Datang di Chatbot Layanan Publik Indonesia 🇮🇩
 
-Layanan yang tersedia:
+Silakan pilih layanan:
 
 1. KTP
 2. KK
@@ -28,97 +29,189 @@ Layanan yang tersedia:
 8. Pengaduan
 9. Keluar
 
-Ketik nomor layanan.
+Ketik angka menu yang diinginkan.
 """
 
-        if self.state == State.MENU:
+        elif self.state == State.MENU:
 
             if msg == "1":
-                return """
-Persyaratan KTP:
+                self.state = State.KTP
 
-• Berusia 17 tahun
-• Membawa KK
-• Datang ke Disdukcapil
+                return """
+Persyaratan Pembuatan KTP:
+
+• Berusia minimal 17 tahun
+• Membawa Kartu Keluarga
+• Datang ke Disdukcapil setempat
+
+Ketik menu lain untuk melanjutkan.
 """
 
             elif msg == "2":
-                return """
-Persyaratan KK:
+                self.state = State.KK
 
-• Surat pengantar RT/RW
+                return """
+Persyaratan Pembuatan KK:
+
+• Surat Pengantar RT/RW
 • Buku Nikah
-• Dokumen pendukung
+• Dokumen pendukung lainnya
+
+Ketik menu lain untuk melanjutkan.
 """
 
             elif msg == "3":
+                self.state = State.AKTA
+
                 return """
 Persyaratan Akta Kelahiran:
 
-• Surat kelahiran
-• KTP orang tua
-• KK
+• Surat Kelahiran
+• KTP Orang Tua
+• Kartu Keluarga
+
+Ketik menu lain untuk melanjutkan.
 """
 
             elif msg == "4":
+                self.state = State.SIM
+
                 return """
-Informasi SIM:
+Persyaratan Pembuatan SIM:
 
 • Fotokopi KTP
-• Surat kesehatan
-• Tes teori dan praktik
+• Surat Kesehatan
+• Lulus Tes Teori dan Praktik
+
+Ketik menu lain untuk melanjutkan.
 """
 
             elif msg == "5":
+                self.state = State.PASPOR
+
                 return """
-Informasi Paspor:
+Persyaratan Paspor:
 
 • E-KTP
 • KK
 • Akta Kelahiran
-• Daftar melalui aplikasi M-Paspor
+
+Pendaftaran dapat dilakukan melalui aplikasi M-Paspor.
+
+Ketik menu lain untuk melanjutkan.
 """
 
             elif msg == "6":
+                self.state = State.BPJS
+
                 return """
-Informasi BPJS:
+Persyaratan Pendaftaran BPJS:
 
 • KTP
 • KK
-• Nomor HP aktif
+• Nomor HP Aktif
+
+Ketik menu lain untuk melanjutkan.
 """
 
             elif msg == "7":
+                self.state = State.PAJAK
+
                 return """
 Informasi Pajak:
 
-• NPWP
-• EFIN
-• Lapor melalui DJP Online
+• Memiliki NPWP
+• Memiliki EFIN
+• Pelaporan melalui DJP Online
+
+Ketik menu lain untuk melanjutkan.
 """
 
             elif msg == "8":
+
                 self.state = State.PENGADUAN
 
                 return """
 Silakan tuliskan pengaduan Anda.
+Contoh:
+
+"Jalan rusak di Kecamatan ABC"
 """
 
             elif msg == "9":
+
                 self.state = State.EXIT
 
                 return "Terima kasih telah menggunakan layanan kami."
 
-            return "Pilihan tidak tersedia."
+            else:
 
-        if self.state == State.PENGADUAN:
+                return """
+Pilihan tidak tersedia.
+
+Silakan pilih:
+
+1. KTP
+2. KK
+3. Akta Kelahiran
+4. SIM
+5. Paspor
+6. BPJS
+7. Pajak
+8. Pengaduan
+9. Keluar
+"""
+
+        elif self.state == State.PENGADUAN:
 
             self.state = State.MENU
 
             return f"""
-Pengaduan diterima:
+Pengaduan berhasil diterima:
 
-'{message}'
+"{message}"
 
 Laporan akan diteruskan ke instansi terkait.
+
+Silakan pilih layanan kembali:
+
+1. KTP
+2. KK
+3. Akta Kelahiran
+4. SIM
+5. Paspor
+6. BPJS
+7. Pajak
+8. Pengaduan
+9. Keluar
 """
+
+        elif self.state in [
+            State.KTP,
+            State.KK,
+            State.AKTA,
+            State.SIM,
+            State.PASPOR,
+            State.BPJS,
+            State.PAJAK
+        ]:
+
+            self.state = State.MENU
+
+            return """
+Silakan pilih layanan berikutnya:
+
+1. KTP
+2. KK
+3. Akta Kelahiran
+4. SIM
+5. Paspor
+6. BPJS
+7. Pajak
+8. Pengaduan
+9. Keluar
+"""
+
+        elif self.state == State.EXIT:
+
+            return "Program telah selesai."
