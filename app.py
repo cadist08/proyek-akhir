@@ -1,330 +1,261 @@
 import streamlit as st
 from engine import GovernmentChatbot
 
-# =========================
-# KONFIGURASI HALAMAN
-# =========================
+# --- KONFIGURASI HALAMAN ---
 st.set_page_config(
-    page_title="Portal Layanan Publik Digital",
+    page_title="Layanan Publik Digital",
     page_icon="🏛️",
-    layout="wide"
+    layout="wide",
+    initial_sidebar_state="expanded"
 )
 
-# =========================
-# CSS CUSTOM
-# =========================
+# --- CUSTOM CSS & JAVASCRIPT ---
 st.markdown("""
 <style>
+    /* Import Font Poppins */
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
 
-.stApp{
-    background-color:#f4f7fc;
-}
+    /* Reset & Base Style */
+    .stApp {
+        font-family: 'Poppins', sans-serif;
+        background-color: #f0f2f6;
+    }
 
-.hero{
-    background: linear-gradient(135deg,#0f172a,#1e40af,#2563eb);
-    padding:40px;
-    border-radius:20px;
-    color:white;
-    text-align:center;
-    box-shadow:0 4px 20px rgba(0,0,0,0.2);
-    margin-bottom:25px;
-}
+    /* --- HEADER HERO SECTION --- */
+    .hero-section {
+        background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+        color: white;
+        padding: 20px 30px;
+        border-radius: 0px 0px 20px 20px;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        margin-bottom: 30px;
+    }
+    .hero-title {
+        font-size: 28px;
+        font-weight: 700;
+        margin-bottom: 5px;
+    }
+    .hero-subtitle {
+        font-size: 14px;
+        opacity: 0.9;
+        font-weight: 300;
+    }
 
-.hero h1{
-    font-size:42px;
-    margin-bottom:10px;
-}
+    /* --- SIDEBAR --- */
+    [data-testid="stSidebar"] {
+        background-color: #ffffff;
+        border-right: 1px solid #e5e7eb;
+    }
+    .sidebar-menu-item {
+        padding: 10px 15px;
+        margin-bottom: 5px;
+        border-radius: 8px;
+        color: #4b5563;
+        transition: 0.3s;
+    }
+    .sidebar-menu-item:hover {
+        background-color: #eff6ff;
+        color: #1e40af;
+        font-weight: 500;
+    }
 
-.hero p{
-    font-size:18px;
-}
+    /* --- CHAT CONTAINER --- */
+    .chat-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding-bottom: 80px;
+    }
 
-.service-card{
-    background:white;
-    border-radius:15px;
-    padding:20px;
-    text-align:center;
-    box-shadow:0 2px 10px rgba(0,0,0,0.1);
-    margin-bottom:10px;
-}
+    /* Chat Bubbles */
+    .chat-bubble {
+        padding: 12px 18px;
+        border-radius: 18px;
+        font-size: 15px;
+        line-height: 1.5;
+        max-width: 80%;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        margin-bottom: 10px;
+        display: inline-block;
+        white-space: pre-wrap;
+    }
 
-.footer{
-    text-align:center;
-    color:#64748b;
-    margin-top:30px;
-    padding:15px;
-}
+    /* User Message */
+    .user-msg {
+        background: linear-gradient(135deg, #2563eb, #1d4ed8);
+        color: white;
+        float: right;
+        clear: both;
+        border-bottom-right-radius: 4px;
+        text-align: right;
+    }
 
-[data-testid="stSidebar"]{
-    background-color:#ffffff;
-}
+    /* Bot Message */
+    .bot-msg {
+        background: white;
+        color: #1f2937;
+        float: left;
+        clear: both;
+        border-bottom-left-radius: 4px;
+        border: 1px solid #e5e7eb;
+    }
 
-[data-testid="stChatMessage"]{
-    border-radius:15px;
-    padding:10px;
-}
+    /* Clearing float */
+    .clear-fix {
+        clear: both;
+        content: "";
+        display: table;
+    }
 
+    /* --- QUICK BUTTONS --- */
+    .quick-btn-container {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+    }
+    .stButton>button {
+        border-radius: 12px;
+        border: 1px solid #e5e7eb;
+        background: white;
+        color: #374151;
+        transition: all 0.3s;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        font-weight: 500;
+    }
+    .stButton>button:hover {
+        border-color: #2563eb;
+        color: #2563eb;
+        background: #eff6ff;
+        transform: translateY(-2px);
+    }
+
+    /* --- CHAT INPUT --- */
+    .stTextInput>div>div>input {
+        border-radius: 20px;
+        padding: 10px 20px;
+        box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+    }
+
+    /* Footer */
+    .footer-custom {
+        text-align: center;
+        color: #9ca3af;
+        font-size: 12px;
+        margin-top: 30px;
+    }
 </style>
+
+<script>
+    // Auto-scroll to bottom of chat
+    window.scrollTo(0, document.body.scrollHeight);
+</script>
 """, unsafe_allow_html=True)
 
-# =========================
-# HERO SECTION
-# =========================
-st.markdown("""
-<div class="hero">
-    <h1>🏛️ Portal Layanan Publik Digital</h1>
-    <p>
-        Sistem Informasi Pelayanan Administrasi Berbasis
-        Finite State Machine (FSM)
-    </p>
-</div>
-""", unsafe_allow_html=True)
+# --- FUNGSI RENDER CHAT ---
+def render_chat_message(role, content):
+    if role == "user":
+        st.markdown(f'<div class="chat-bubble user-msg">{content}</div>', unsafe_allow_html=True)
+    else:
+        st.markdown(f'<div class="chat-bubble bot-msg">{content}</div>', unsafe_allow_html=True)
+    st.markdown('<div class="clear-fix"></div>', unsafe_allow_html=True)
 
-# =========================
-# INISIALISASI BOT
-# =========================
+# --- INIT SESSION STATE ---
 if "bot" not in st.session_state:
     st.session_state.bot = GovernmentChatbot()
 
 if "messages" not in st.session_state:
-
     st.session_state.messages = []
-
     welcome = st.session_state.bot.process("start")
-
     st.session_state.messages.append({
         "role": "assistant",
         "content": welcome
     })
 
-# =========================
-# SIDEBAR
-# =========================
-with st.sidebar:
+# --- LAYOUT UTAMA ---
+# 1. Hero Header
+st.markdown("""
+<div class="hero-section">
+    <div class="hero-title">🏛️ Smart Public Service</div>
+    <div class="hero-subtitle">Sistem Informasi Layanan Publik Berbasis AI</div>
+</div>
+""", unsafe_allow_html=True)
 
-    st.image(
-        "https://upload.wikimedia.org/wikipedia/commons/9/9f/Coat_of_arms_of_Indonesia_Garuda_Pancasila.svg",
-        width=120
-    )
+# Kolom Utama: Main Chat (2/3) dan Sidebar Info (1/3)
+col_main, col_side = st.columns([3, 1])
 
-    st.header("📋 Layanan")
-
-    st.write("""
-    🪪 KTP
-
-    👨‍👩‍👧‍👦 KK
-
-    📄 Akta Kelahiran
-
-    🚗 SIM
-
-    🛂 Paspor
-
-    🏥 BPJS
-
-    💰 Pajak
-
-    📢 Pengaduan
-    """)
-
+with col_side:
+    st.markdown("### 📋 Menu Layanan")
+    st.markdown("""
+    <div style='text-align: left; line-height: 1.8;'>
+    🪪 <b>KTP</b><br>
+    👨‍👩‍👧 <b>Kartu Keluarga</b><br>
+    📜 <b>Akta Kelahiran</b><br>
+    🚗 <b>SIM</b><br>
+    🛂 <b>Paspor</b><br>
+    🏥 <b>BPJS</b><br>
+    💰 <b>Pajak</b><br>
+    📢 <b>Pengaduan</b>
+    </div>
+    """, unsafe_allow_html=True)
+    
     st.divider()
-
-    st.header("📊 Statistik")
-
-    st.metric("Jumlah Layanan", "8")
-    st.metric("State FSM", "10")
-    st.metric("Status Sistem", "Aktif")
-
-    st.divider()
-
-    st.header("🔄 Reset Chat")
-
-    if st.button("Reset Percakapan"):
-
+    
+    if st.button("🔄 Reset Percakapan"):
         st.session_state.bot = GovernmentChatbot()
-
         st.session_state.messages = []
-
         welcome = st.session_state.bot.process("start")
-
         st.session_state.messages.append({
             "role": "assistant",
             "content": welcome
         })
-
         st.rerun()
 
-    st.divider()
+    st.markdown("### 💡 Tips")
+    st.info("Ketik angka menu (contoh: 1) untuk memilih layanan. Ketik 0 untuk kembali ke menu utama.")
 
-    st.header("📌 Diagram FSM")
+with col_main:
+    # Quick Actions Buttons (Above Chat)
+    st.markdown("### ⚡ Layanan Cepat")
+    c1, c2, c3, c4 = st.columns(4)
+    services = [
+        ("1", "🪪 KTP", c1),
+        ("2", "👨‍👩‍👧 KK", c2),
+        ("4", "🚗 SIM", c3),
+        ("6", "🏥 BPJS", c4)
+    ]
 
-    st.code("""
-START
-   ↓
- MENU
- ├── KTP
- ├── KK
- ├── AKTA
- ├── SIM
- ├── PASPOR
- ├── BPJS
- ├── PAJAK
- ├── PENGADUAN
- └── EXIT
-""")
+    for code, label, col in services:
+        with col:
+            if st.button(label, key=f"btn_{code}"):
+                st.session_state.messages.append({"role": "user", "content": code})
+                st.session_state.messages.append({
+                    "role": "assistant",
+                    "content": st.session_state.bot.process(code)
+                })
+                st.rerun()
 
-# =========================
-# KARTU LAYANAN
-# =========================
-st.subheader("📌 Layanan Tersedia")
+    st.markdown("---")
 
-col1, col2, col3, col4 = st.columns(4)
+    # Chat Display Area
+    chat_container = st.container()
+    with chat_container:
+        for msg in st.session_state.messages:
+            render_chat_message(msg["role"], msg["content"])
 
-with col1:
-    st.markdown("""
-    <div class="service-card">
-        <h3>🪪 KTP</h3>
-        <p>Kartu Tanda Penduduk</p>
-    </div>
-    """, unsafe_allow_html=True)
-
-with col2:
-    st.markdown("""
-    <div class="service-card">
-        <h3>👨‍👩‍👧‍👦 KK</h3>
-        <p>Kartu Keluarga</p>
-    </div>
-    """, unsafe_allow_html=True)
-
-with col3:
-    st.markdown("""
-    <div class="service-card">
-        <h3>🚗 SIM</h3>
-        <p>Surat Izin Mengemudi</p>
-    </div>
-    """, unsafe_allow_html=True)
-
-with col4:
-    st.markdown("""
-    <div class="service-card">
-        <h3>🏥 BPJS</h3>
-        <p>Layanan Kesehatan</p>
-    </div>
-    """, unsafe_allow_html=True)
-
-st.divider()
-
-# =========================
-# TOMBOL CEPAT
-# =========================
-st.subheader("⚡ Akses Cepat")
-
-c1, c2, c3, c4 = st.columns(4)
-
-with c1:
-    if st.button("🪪 Informasi KTP"):
-
-        st.session_state.messages.append(
-            {"role": "user", "content": "1"}
-        )
-
-        st.session_state.messages.append(
-            {
-                "role": "assistant",
-                "content": st.session_state.bot.process("1")
-            }
-        )
-
+    # Input Area
+    prompt = st.chat_input("Tulis pesan atau nomor menu...")
+    
+    if prompt:
+        st.session_state.messages.append({
+            "role": "user",
+            "content": prompt
+        })
+        response = st.session_state.bot.process(prompt)
+        st.session_state.messages.append({
+            "role": "assistant",
+            "content": response
+        })
         st.rerun()
 
-with c2:
-    if st.button("👨‍👩‍👧‍👦 Informasi KK"):
-
-        st.session_state.messages.append(
-            {"role": "user", "content": "2"}
-        )
-
-        st.session_state.messages.append(
-            {
-                "role": "assistant",
-                "content": st.session_state.bot.process("2")
-            }
-        )
-
-        st.rerun()
-
-with c3:
-    if st.button("🚗 Informasi SIM"):
-
-        st.session_state.messages.append(
-            {"role": "user", "content": "4"}
-        )
-
-        st.session_state.messages.append(
-            {
-                "role": "assistant",
-                "content": st.session_state.bot.process("4")
-            }
-        )
-
-        st.rerun()
-
-with c4:
-    if st.button("🏥 Informasi BPJS"):
-
-        st.session_state.messages.append(
-            {"role": "user", "content": "6"}
-        )
-
-        st.session_state.messages.append(
-            {
-                "role": "assistant",
-                "content": st.session_state.bot.process("6")
-            }
-        )
-
-        st.rerun()
-
-st.divider()
-
-# =========================
-# CHAT AREA
-# =========================
-st.subheader("💬 Chatbot Layanan Publik")
-
-for msg in st.session_state.messages:
-
-    with st.chat_message(msg["role"]):
-        st.markdown(msg["content"])
-
-prompt = st.chat_input(
-    "Ketik angka menu atau tulis pengaduan..."
-)
-
-if prompt:
-
-    st.session_state.messages.append({
-        "role": "user",
-        "content": prompt
-    })
-
-    response = st.session_state.bot.process(prompt)
-
-    st.session_state.messages.append({
-        "role": "assistant",
-        "content": response
-    })
-
-    st.rerun()
-
-# =========================
-# FOOTER
-# =========================
-st.markdown("""
-<hr>
-<div class="footer">
-    <b>🏛️ Smart Public Service Chatbot</b><br>
-    Sistem Informasi Layanan Publik Berbasis FSM<br>
-    © 2026
-</div>
-""", unsafe_allow_html=True)
+# Footer
+st.markdown('<div class="footer-custom">© 2026 Smart Public Service Chatbot - Powered by Finite State Machine</div>', unsafe_allow_html=True)
