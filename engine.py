@@ -5,9 +5,7 @@ from FSM import State
 
 
 MENU_TEXT = """
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 📋 **MENU UTAMA**
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 **📄 Layanan Dokumen**
 `1` · 🪪 KTP
@@ -26,7 +24,6 @@ MENU_TEXT = """
 `12` · 📅 Jadwal Pelayanan
 `0` · 🚪 Keluar
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 """
 
 
@@ -54,7 +51,7 @@ class GovernmentChatbot:
         msg = message.strip()
         msg_lower = msg.lower()
 
-        # ── START ──────────────────────────────────────────────
+        # START
         if self.state == State.START:
             self.state = State.MENU
             now = datetime.now()
@@ -75,15 +72,13 @@ Saya **SIPA** *(Sistem Informasi Pelayanan Administrasi)*, siap membantu Anda me
 💡 *Ketik nomor menu untuk memilih layanan*
 """
 
-        # ── MENU ───────────────────────────────────────────────
+        # MENU
         elif self.state == State.MENU:
 
             if msg == "1":
                 self.state = State.KTP
                 return """
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 🪪 **LAYANAN KTP ELEKTRONIK**
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 **Pilih jenis layanan KTP:**
 
@@ -98,9 +93,7 @@ Saya **SIPA** *(Sistem Informasi Pelayanan Administrasi)*, siap membantu Anda me
             elif msg == "2":
                 self.state = State.KK
                 return """
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 👨‍👩‍👧 **LAYANAN KARTU KELUARGA**
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 **📋 Persyaratan Umum:**
 ✅ Surat Pengantar RT → RW → Kelurahan
@@ -129,9 +122,7 @@ Ketik **`0`** untuk menu atau **`9`** untuk ambil antrian.
             elif msg == "3":
                 self.state = State.AKTA
                 return """
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 📜 **LAYANAN AKTA KELAHIRAN**
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 **📋 Persyaratan:**
 ✅ Surat Keterangan Lahir dari RS/Bidan/Puskesmas
@@ -154,9 +145,7 @@ Aplikasi **Dukcapil Go Digital** atau website resmi Disdukcapil
             elif msg == "4":
                 self.state = State.SIM
                 return """
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 🚗 **LAYANAN SIM (SATLANTAS)**
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 **Pilih jenis layanan SIM:**
 
@@ -171,9 +160,7 @@ Aplikasi **Dukcapil Go Digital** atau website resmi Disdukcapil
             elif msg == "5":
                 self.state = State.PASPOR
                 return """
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 🛂 **LAYANAN PASPOR (IMIGRASI)**
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 **📋 Persyaratan Dasar:**
 ✅ E-KTP asli + fotokopi
@@ -200,9 +187,7 @@ Aplikasi **Dukcapil Go Digital** atau website resmi Disdukcapil
             elif msg == "6":
                 self.state = State.BPJS
                 return """
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 🏥 **LAYANAN BPJS KESEHATAN**
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 **Pilih layanan BPJS:**
 
@@ -217,9 +202,7 @@ Aplikasi **Dukcapil Go Digital** atau website resmi Disdukcapil
             elif msg == "7":
                 self.state = State.PAJAK
                 return """
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 💰 **LAYANAN PAJAK (DJP)**
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 **Pilih layanan pajak:**
 
@@ -234,9 +217,7 @@ Aplikasi **Dukcapil Go Digital** atau website resmi Disdukcapil
             elif msg == "8":
                 self.state = State.PENGADUAN_KATEGORI
                 return """
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 📢 **LAYANAN PENGADUAN MASYARAKAT**
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 Pilih **kategori pengaduan** Anda:
 
@@ -256,9 +237,7 @@ Pilih **kategori pengaduan** Anda:
             elif msg == "9":
                 self.state = State.ANTRIAN_PILIH
                 return """
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 🎫 **AMBIL NOMOR ANTRIAN**
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 Pilih layanan untuk ambil antrian:
 
@@ -284,9 +263,7 @@ Pilih layanan untuk ambil antrian:
             elif msg == "10":
                 self.state = State.STATUS
                 return """
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 🔍 **CEK STATUS PENGADUAN**
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 Masukkan **Nomor Tiket Pengaduan** Anda.
 
@@ -301,9 +278,7 @@ Contoh: `ADU-040626-123456`
             elif msg == "11":
                 self.state = State.FAQ
                 return """
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ❓ **FAQ — PERTANYAAN UMUM**
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 Pilih topik pertanyaan:
 
@@ -329,7 +304,7 @@ Pilih topik pertanyaan:
             else:
                 return f"⚠️ Pilihan **\"{msg}\"** tidak tersedia.\n\nSilakan ketik angka **1–12** atau **0** untuk keluar.\n{MENU_TEXT}"
 
-        # ── KTP Sub-Menu ────────────────────────────────────────
+        #  KTP Sub-Menu 
         elif self.state == State.KTP:
             opt = msg.upper()
             if opt == "A":
@@ -388,7 +363,7 @@ Pilih topik pertanyaan:
             self.state = State.MENU
             return resp + "\n\n`0` · 🔙 Ketik **0** untuk Menu Utama"
 
-        # ── SIM Sub-Menu ────────────────────────────────────────
+        #  SIM Sub-Menu 
         elif self.state == State.SIM:
             opt = msg.upper()
             if opt == "A":
@@ -457,7 +432,7 @@ Pilih topik pertanyaan:
             self.state = State.MENU
             return resp + "\n\n`0` · 🔙 Ketik **0** untuk Menu Utama"
 
-        # ── BPJS Sub-Menu ───────────────────────────────────────
+        #  BPJS Sub-Menu 
         elif self.state == State.BPJS:
             opt = msg.upper()
             if opt == "A":
@@ -518,7 +493,7 @@ Masukkan kode pos atau nama kota untuk menemukan:
             self.state = State.MENU
             return resp + "\n\n`0` · 🔙 Ketik **0** untuk Menu Utama"
 
-        # ── PAJAK Sub-Menu ──────────────────────────────────────
+        #  PAJAK Sub-Menu 
         elif self.state == State.PAJAK:
             opt = msg.upper()
             if opt == "A":
@@ -586,7 +561,7 @@ EFIN (Electronic Filing Identification Number) diperlukan untuk lapor SPT online
             self.state = State.MENU
             return resp + "\n\n`0` · 🔙 Ketik **0** untuk Menu Utama"
 
-        # ── PENGADUAN — Pilih Kategori ──────────────────────────
+        #  PENGADUAN — Pilih Kategori 
         elif self.state == State.PENGADUAN_KATEGORI:
             opt = msg.upper()
             kategori_map = {
@@ -604,9 +579,7 @@ EFIN (Electronic Filing Identification Number) diperlukan untuk lapor SPT online
                 self.pending_kategori = kategori_map[opt]
                 self.state = State.PENGADUAN_TULIS
                 return f"""
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 📢 **PENGADUAN — {kategori_map[opt]}**
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 ✏️ Silakan **tuliskan pengaduan Anda secara lengkap:**
 
@@ -623,7 +596,7 @@ Sertakan informasi:
             else:
                 return "⚠️ Pilih kategori **A** hingga **I**, atau **0** untuk kembali."
 
-        # ── PENGADUAN — Tulis Isi ───────────────────────────────
+        #  PENGADUAN — Tulis Isi 
         elif self.state == State.PENGADUAN_TULIS:
             if msg == "0":
                 self.state = State.MENU
@@ -640,9 +613,7 @@ Sertakan informasi:
             self.pending_kategori = None
             self.state = State.MENU
             return f"""
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 ✅ **PENGADUAN BERHASIL DITERIMA**
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 📌 **Nomor Tiket:** `{nomor}`
 🗂️ **Kategori:** {kategori}
@@ -667,7 +638,7 @@ Gunakan menu `10` untuk mengecek status pengaduan.
 
 {MENU_TEXT}"""
 
-        # ── STATUS PENGADUAN ────────────────────────────────────
+        #  STATUS PENGADUAN 
         elif self.state == State.STATUS:
             if msg == "0":
                 self.state = State.MENU
@@ -678,9 +649,7 @@ Gunakan menu `10` untuk mengecek status pengaduan.
                 status_icon = {"Diterima": "🟡", "Diverifikasi": "🔵", "Diproses": "🟠", "Selesai": "🟢"}.get(data["status"], "⚪")
                 self.state = State.MENU
                 return f"""
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 🔍 **STATUS PENGADUAN DITEMUKAN**
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 📌 **Nomor:** `{msg.upper()}`
 🗂️ **Kategori:** {data["kategori"]}
@@ -706,7 +675,7 @@ Kemungkinan penyebab:
 
 {MENU_TEXT}"""
 
-        # ── AMBIL ANTRIAN ───────────────────────────────────────
+        #  AMBIL ANTRIAN 
         elif self.state == State.ANTRIAN_PILIH:
             antrian_map = {
                 "1": "KTP", "2": "KK", "3": "AKTA",
@@ -724,9 +693,7 @@ Kemungkinan penyebab:
                 nomor_antrian, est_waktu = self._generate_antrian(jenis)
                 self.state = State.MENU
                 return f"""
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 🎫 **NOMOR ANTRIAN BERHASIL**
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 {emoji_map[jenis]} **Layanan:** {jenis}
 🔢 **Nomor Antrian Anda:**
@@ -744,7 +711,7 @@ Kemungkinan penyebab:
             else:
                 return "⚠️ Pilih layanan **1–7** atau **0** untuk kembali."
 
-        # ── FAQ ─────────────────────────────────────────────────
+        #  FAQ 
         elif self.state == State.FAQ:
             faq_answers = {
                 "1": """
@@ -845,17 +812,17 @@ Hubungi **Posko BPBD** atau Kelurahan setempat untuk koordinasi.
             else:
                 return "⚠️ Pilih nomor **1–7** atau **0** untuk kembali ke Menu."
 
-        # ── JADWAL ──────────────────────────────────────────────
+        #  JADWAL 
         elif self.state == State.JADWAL:
             self.state = State.MENU
             return MENU_TEXT
 
-        # ── AKTA, KK (simple) ───────────────────────────────────
+        #  AKTA, KK (simple) 
         elif self.state in [State.AKTA]:
             self.state = State.MENU
             return MENU_TEXT
 
-        # ── EXIT ────────────────────────────────────────────────
+        #  EXIT 
         elif self.state == State.EXIT:
             return "🙏 Sesi telah berakhir. Refresh halaman untuk memulai kembali."
 
@@ -869,9 +836,7 @@ Hubungi **Posko BPBD** atau Kelurahan setempat untuk koordinasi.
         status = "🟢 **BUKA**" if buka else "🔴 **TUTUP**"
 
         return f"""
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 📅 **JADWAL PELAYANAN**
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
 🗓️ Hari ini: **{hari_ini}, {now.strftime("%d %B %Y")}**
 🕐 Pukul: **{now.strftime("%H:%M")} WIB**
